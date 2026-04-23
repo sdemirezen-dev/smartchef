@@ -3,17 +3,18 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
     document.getElementById('tab-' + tabId).classList.add('active');
-    
-    if(tabId !== 'home') {
+
+    if (tabId !== 'home') {
         const links = document.querySelectorAll('.nav-links a');
         for (let link of links) {
             if (link.getAttribute('onclick') === `switchTab('${tabId}')`) link.classList.add('active');
         }
     }
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
 // ---------------- CART LOGIC ----------------
+// hi Sinem I see your work I ove you
 let cart = [];
 function addToCart(name, priceOrBtn) {
     let price = 0;
@@ -29,7 +30,7 @@ function addToCart(name, priceOrBtn) {
     document.getElementById('cartCount').innerText = cart.length;
 
     // Visual button feedback if called from a click event
-    if(event && event.target && event.target.tagName === 'BUTTON') {
+    if (event && event.target && event.target.tagName === 'BUTTON') {
         const btn = event.target;
         const ogText = btn.innerText;
         btn.innerText = 'Added!';
@@ -47,7 +48,7 @@ function openCart() {
     const list = document.getElementById('cartItemList');
     let total = 0;
     list.innerHTML = '';
-    
+
     if (cart.length === 0) {
         list.innerHTML = '<p style="color: var(--text-muted);">Cart is empty.</p>';
     } else {
@@ -69,7 +70,7 @@ function closeLogin() { document.getElementById('loginModal').style.display = 'n
 
 function processLogin() {
     const val = document.getElementById('usernameInput').value.trim();
-    if(val) {
+    if (val) {
         currentUser = val;
         localStorage.setItem('smartchef_user', currentUser);
         document.getElementById('loginHeaderBtn').innerText = `Hello, ${currentUser}`;
@@ -83,9 +84,9 @@ function processLogin() {
 }
 
 // Auto-login if previously saved
-window.onload = function() {
+window.onload = function () {
     const savedUser = localStorage.getItem('smartchef_user');
-    if(savedUser) {
+    if (savedUser) {
         document.getElementById('usernameInput').value = savedUser;
         processLogin();
     } else {
@@ -97,7 +98,7 @@ window.onload = function() {
 let pantryItems = [];
 function addPantryItem() {
     const val = document.getElementById('pantryInput').value.trim();
-    if(val) {
+    if (val) {
         pantryItems.push(val);
         document.getElementById('pantryInput').value = '';
         renderPantry();
@@ -114,22 +115,22 @@ function renderPantry() {
 }
 
 function savePantry() {
-    if(currentUser) {
+    if (currentUser) {
         localStorage.setItem(`pantry_${currentUser}`, JSON.stringify(pantryItems));
     }
 }
 
 function loadPantry() {
-    if(currentUser) {
+    if (currentUser) {
         const saved = localStorage.getItem(`pantry_${currentUser}`);
-        if(saved) pantryItems = JSON.parse(saved);
+        if (saved) pantryItems = JSON.parse(saved);
         renderPantry();
     }
     fetchLiveProducts();
 }
 
 function suggestRecipes() {
-    if(pantryItems.length === 0) { alert("Add items to your pantry first!"); return; }
+    if (pantryItems.length === 0) { alert("Add items to your pantry first!"); return; }
     switchTab('whattocook');
     document.getElementById('aiPantryInput').value = pantryItems.join(', ');
     generateAIRecipes();
@@ -141,16 +142,16 @@ let liveProducts = [];
 
 async function fetchLiveProducts(category = 'all') {
     document.getElementById('shopLoadingText').style.display = 'block';
-    
+
     let url = 'https://world.openfoodfacts.org/api/v2/search?fields=code,product_name,brands,image_front_url&page_size=60';
-    if(category !== 'all') {
+    if (category !== 'all') {
         url += `&categories_tags=en:${category}`;
     }
 
     try {
         const res = await fetch(url);
         const data = await res.json();
-        
+
         // Map Open Food Facts data, assign mock prices
         liveProducts = data.products.map((p, index) => {
             return {
@@ -161,14 +162,14 @@ async function fetchLiveProducts(category = 'all') {
                 price: parseFloat(((Math.random() * 10) + 1.99).toFixed(2)) // Mock realistic price
             };
         });
-        
+
         // Pad the catalog to reach 1000+ items as requested
         const brands = ["Great Value", "Freshness Guaranteed", "Marketside", "Organic", "Equate", "Chef's Choice", "Farm Fresh", "Nature's Path"];
         const types = ["Produce", "Canned Goods", "Dry Pasta", "Rice", "Cereal", "Coffee", "Tea", "Apple", "Banana", "Carrot", "Broccoli", "Tomato", "Spinach", "Grapes", "Orange", "Lettuce", "Strawberry", "Watermelon", "Potato"];
-        for(let i=0; i<950; i++){
+        for (let i = 0; i < 950; i++) {
             liveProducts.push({
-                id: 5000+i,
-                title: `${brands[Math.floor(Math.random()*brands.length)]} ${types[Math.floor(Math.random()*types.length)]}`,
+                id: 5000 + i,
+                title: `${brands[Math.floor(Math.random() * brands.length)]} ${types[Math.floor(Math.random() * types.length)]}`,
                 price: parseFloat(((Math.random() * 10) + 1.99).toFixed(2)),
                 thumbnail: 'https://via.placeholder.com/150/1E1E1E/FF5A00?text=Grocery',
                 brand: 'Simulated Catalog'
@@ -177,7 +178,7 @@ async function fetchLiveProducts(category = 'all') {
 
         document.getElementById('shopLoadingText').style.display = 'none';
         renderShop(liveProducts.slice(0, 60));
-    } catch(err) {
+    } catch (err) {
         document.getElementById('shopLoadingText').innerText = "Failed to load Open Food Facts API.";
     }
 }
@@ -193,7 +194,7 @@ function renderShop(products) {
                     <h3>${p.title}</h3>
                     <p style="font-size: 0.8rem; color:var(--text-muted); margin-bottom: 0.5rem;">API ID: ${p.id} • ${p.brand || 'Local'}</p>
                     <span class="price-tag">$${p.price.toFixed(2)}</span>
-                    <button class="btn-add" onclick="addToCart('${p.title.replace(/'/g,"")}', ${p.price})">Add to Cart</button>
+                    <button class="btn-add" onclick="addToCart('${p.title.replace(/'/g, "")}', ${p.price})">Add to Cart</button>
                 </div>
             </div>
         `;
@@ -208,7 +209,7 @@ function filterShop() {
 
 function setCategory(cat, btnElement) {
     document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-    if(btnElement) btnElement.classList.add('active');
+    if (btnElement) btnElement.classList.add('active');
     document.getElementById('shopSearchInput').value = ''; // clear search
     fetchLiveProducts(cat);
 }
@@ -223,15 +224,15 @@ const categories = ["Mix", "Vegetarian", "Meat", "Seafood"];
 const cuisines = ["Chinese", "Indian", "French", "Mexican", "Thai", "Mediterranean", "American", "Italian", "Korean", "Japanese"];
 const times = [15, 30, 45, 60];
 
-for(let i=0; i<5000; i++) {
+for (let i = 0; i < 5000; i++) {
     const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
     const noun = nouns[Math.floor(Math.random() * nouns.length)];
     const style = styles[Math.floor(Math.random() * styles.length)];
-    
+
     let cat = categories[Math.floor(Math.random() * categories.length)];
-    if(["Chicken", "Beef", "Pork", "Lamb", "Meat", "Steak"].includes(noun)) cat = "Meat";
-    if(["Tofu", "Eggplant", "Broccoli", "Tomato", "Potato", "Rice", "Pasta"].includes(noun)) cat = "Vegetarian";
-    if(["Salmon", "Shrimp", "Tuna", "Fish", "Cod"].includes(noun)) cat = "Seafood";
+    if (["Chicken", "Beef", "Pork", "Lamb", "Meat", "Steak"].includes(noun)) cat = "Meat";
+    if (["Tofu", "Eggplant", "Broccoli", "Tomato", "Potato", "Rice", "Pasta"].includes(noun)) cat = "Vegetarian";
+    if (["Salmon", "Shrimp", "Tuna", "Fish", "Cod"].includes(noun)) cat = "Seafood";
 
     let time = times[Math.floor(Math.random() * times.length)];
     let cuisine = cuisines[Math.floor(Math.random() * cuisines.length)];
@@ -245,13 +246,13 @@ for(let i=0; i<5000; i++) {
         price: parseFloat(((Math.random() * 10) + 5.99).toFixed(2))
     });
 }
-massiveRecipes.unshift({title:"Garlic Salmon", desc:"Missing Salmon!", category: "Seafood", cuisine: "American", time: 30, price: 15.99});
-massiveRecipes.unshift({title:"Taco Fiesta", desc:"Missing Shells!", category: "Meat", cuisine: "Mexican", time: 15, price: 12.99});
+massiveRecipes.unshift({ title: "Garlic Salmon", desc: "Missing Salmon!", category: "Seafood", cuisine: "American", time: 30, price: 15.99 });
+massiveRecipes.unshift({ title: "Taco Fiesta", desc: "Missing Shells!", category: "Meat", cuisine: "Mexican", time: 15, price: 12.99 });
 
 let currentRibbonFilter = 'all';
 function setRibbonFilter(val, btnElement) {
     document.querySelectorAll('.wtc-main .category-bar .category-btn').forEach(btn => btn.classList.remove('active'));
-    if(btnElement) btnElement.classList.add('active');
+    if (btnElement) btnElement.classList.add('active');
     currentRibbonFilter = val;
     search5000Recipes();
 }
@@ -260,11 +261,11 @@ function search5000Recipes() {
     const term = document.getElementById('recipeSearchInput')?.value.toLowerCase() || "";
     const filterCuisine = document.getElementById('filterCuisine')?.value || "all";
     const container = document.getElementById('recipeSearchResultsContainer');
-    
-    if(!container) return; // safety
+
+    if (!container) return; // safety
 
     let matches = massiveRecipes;
-    
+
     // Ribbon logic
     if (currentRibbonFilter.startsWith('time-')) {
         let maxTime = parseInt(currentRibbonFilter.split('-')[1]);
@@ -273,7 +274,7 @@ function search5000Recipes() {
         let reqCat = currentRibbonFilter.split('-')[1];
         matches = matches.filter(r => r.category === reqCat);
     }
-    
+
     // Cuisine & Search logic
     if (filterCuisine !== 'all') {
         matches = matches.filter(r => r.cuisine === filterCuisine);
@@ -281,7 +282,7 @@ function search5000Recipes() {
     if (term) {
         matches = matches.filter(r => r.title.toLowerCase().includes(term));
     }
-    
+
     // Display 20 items and make it scrollable to fit on one page
     matches = matches.slice(0, 20);
 
@@ -304,7 +305,7 @@ function search5000Recipes() {
                 <span class="recipe-badge">${m.time}m • ${m.cuisine} • ${m.category}</span>
                 <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">${m.title}</h3>
                 <span class="price-tag" style="font-size: 1.1rem;">$${m.price.toFixed(2)}</span>
-                <button class="btn-add" style="padding: 0.5rem; font-size: 0.85rem;" onclick="addToCart('${m.title.replace(/'/g,"")} Ingredients', ${m.price})"><i class="fa-solid fa-cart-plus"></i> Add Missing</button>
+                <button class="btn-add" style="padding: 0.5rem; font-size: 0.85rem;" onclick="addToCart('${m.title.replace(/'/g, "")} Ingredients', ${m.price})"><i class="fa-solid fa-cart-plus"></i> Add Missing</button>
             </div>
         </div>`;
     });
@@ -312,7 +313,7 @@ function search5000Recipes() {
 
 function generateAIRecipes() {
     const input = document.getElementById('aiPantryInput').value;
-    if(!input.trim()) {
+    if (!input.trim()) {
         alert("Please enter some pantry items first!");
         return;
     }
@@ -323,15 +324,15 @@ function generateAIRecipes() {
 
     // Show loading
     loading.style.display = 'block';
-    
+
     setTimeout(() => {
         loading.style.display = 'none';
         countText.innerText = "✨ AI Generated Custom Recipe:";
-        
-        const dynamicTitle = `Chef's Choice ${input.split(',')[0].trim()} Delight`.replace(/'/g,"");
+
+        const dynamicTitle = `Chef's Choice ${input.split(',')[0].trim()} Delight`.replace(/'/g, "");
         let seed = dynamicTitle.replace(/\s/g, '');
         const randomPrice = parseFloat(((Math.random() * 10) + 8.99).toFixed(2));
-        
+
         const aiCard = `
         <div class="card ai-recipe-card">
             <div class="card-img-placeholder" style="background-image: url('https://picsum.photos/seed/${seed}/300/200'); height: 150px; border-bottom: 3px solid var(--secondary-color);"></div>
@@ -343,9 +344,9 @@ function generateAIRecipes() {
                 <button class="btn-primary btn" style="width: 100%; border-radius: 4px;" onclick="addToCart('AI ${dynamicTitle} Kit', ${randomPrice})"><i class="fa-solid fa-cart-shopping"></i> Add Missing Ingredients</button>
             </div>
         </div>`;
-        
+
         container.innerHTML = aiCard + container.innerHTML;
-        
+
         // Scroll to the card
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 1500);
@@ -381,7 +382,7 @@ setTimeout(() => {
         const desc = b.desc || "Includes a variety of farm-fresh, high-quality ingredients perfectly portioned for this meal.";
         bc.innerHTML += `
         <div class="card">
-            <div class="card-img-placeholder" style="background-image: url('https://picsum.photos/seed/${b.title.replace(/\s/g,'')}/300/200'); height: 150px;"></div>
+            <div class="card-img-placeholder" style="background-image: url('https://picsum.photos/seed/${b.title.replace(/\s/g, '')}/300/200'); height: 150px;"></div>
             <div class="card-content">
                 <h3 style="color: var(--primary-color); font-size: 1.5rem; margin-bottom: 0.5rem;">${b.title}</h3>
                 <span style="cursor:pointer; color:var(--text-muted); font-size:0.9rem; text-decoration:underline; display:block; margin-bottom:1rem;" onclick="this.nextElementSibling.classList.toggle('d-none')"><i class="fa-solid fa-circle-info"></i> View Contents</span>
