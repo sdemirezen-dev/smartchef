@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartChef Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand" onclick="switchTab('home')"><i class="fa-solid fa-bolt"></i> SmartChef</div>
+        <div class="nav-links" id="navLinks">
+            <a onclick="switchTab('shop')">Shop</a>
+            <a onclick="switchTab('whattocook')">What to cook</a>
+            <a onclick="switchTab('pantry')">My pantry</a>
+            <a onclick="switchTab('recipes')">Recipes</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-outline" id="loginHeaderBtn" onclick="openLogin()">Login</button>
+            <button class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;" onclick="openCart()">
+                <i class="fa-solid fa-cart-shopping"></i> <span id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="appContainer" style="padding-top: 70px;">
+        <!-- HOME TAB -->
+        <div id="tab-home" class="tab-content active" style="padding-bottom:0;">
+            <section class="hero hero-home">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h1 class="hero-title">Premium Digital<br>Grocery</h1>
+                    <div class="hero-subtitle-container"><div class="hero-subtitle">FRESH &bull; ORGANIC &bull; DELIVERED</div></div>
+                    <div><button class="btn btn-primary" onclick="switchTab('shop')">Enter Shop <i class="fa-solid fa-arrow-right"></i></button></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- SHOP TAB -->
+        <div id="tab-shop" class="tab-content">
+            <section class="hero hero-shop" style="height: 300px;">
+                <div class="hero-content hero-content-left">
+                    <h1 class="hero-title hero-title-light">Fresh At Your Door</h1>
+                    <p style="font-size: 1.2rem;">Premium, globally-sourced groceries delivered straight to your kitchen.</p>
+                </div>
+            </section>
+            <div class="section-wrapper">
+                <div class="category-bar">
+                    <button class="category-btn active" onclick="setCategory('all', this)">All Products</button>
+                    <button class="category-btn" onclick="setCategory('vegetables', this)">Vegetables</button>
+                    <button class="category-btn" onclick="setCategory('fruits', this)">Fruits</button>
+                    <button class="category-btn" onclick="setCategory('snacks', this)">Snacks</button>
+                    <button class="category-btn" onclick="setCategory('beverages', this)">Beverages</button>
+                    <button class="category-btn" onclick="setCategory('dairies', this)">Dairy</button>
+                    <button class="category-btn" onclick="setCategory('meats', this)">Meats</button>
+                    <button class="category-btn" onclick="setCategory('sauces', this)">Sauces</button>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: stretch;">
+                    <input type="text" id="shopSearchInput" onkeyup="filterShop()" placeholder="Search global catalog..." style="margin-bottom: 0; flex: 1;">
+                    <button class="btn btn-primary" onclick="filterShop()" style="white-space: nowrap; padding: 0 2rem;"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                </div>
+                <p id="shopLoadingText" style="color:var(--secondary-color); margin-bottom: 2rem;"><i class="fa-solid fa-spinner fa-spin"></i> Fetching live API data from Open Food Facts...</p>
+                <div class="grid-container" id="shopProductsContainer"></div>
+            </div>
+        </div>
+
+        <!-- WHAT TO COOK TAB -->
+        <div id="tab-whattocook" class="tab-content">
+            <section class="hero hero-recipes" style="height: 120px; border-bottom: 2px solid var(--primary-color);">
+                <div class="hero-content hero-content-left" style="padding-top: 1rem;">
+                    <h1 class="hero-title hero-title-light" style="font-size: 2.5rem; margin-bottom: 0;">What To Cook</h1>
+                    <p style="font-size: 1rem;">AI Discovery scanning 5,000+ recipes.</p>
+                </div>
+            </section>
+            <div class="section-wrapper">
+                <div class="wtc-container">
+                    <div class="wtc-sidebar">
+                        <div class="panel">
+                            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI Research</h3>
+                            <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Tell us what's in your pantry, and our AI will generate a custom recipe.</p>
+                            <textarea id="aiPantryInput" placeholder="E.g., I have chicken, tomatoes, and pasta..."></textarea>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="generateAIRecipes()"><i class="fa-solid fa-robot"></i> Ask AI</button>
+                        </div>
+                    </div>
+                    <div class="wtc-main">
+                        <div class="category-bar" style="margin-bottom: 1rem;">
+                            <button class="category-btn active" onclick="setRibbonFilter('all', this)">Mix</button>
+                            <button class="category-btn" onclick="setRibbonFilter('time-15', this)"><i class="fa-solid fa-clock"></i> Under 15m</button>
+                            <button class="category-btn" onclick="setRibbonFilter('time-30', this)"><i class="fa-solid fa-clock"></i> Under 30m</button>
+                            <button class="category-btn" onclick="setRibbonFilter('cat-Vegetarian', this)">Vegetarian</button>
+                            <button class="category-btn" onclick="setRibbonFilter('cat-Meat', this)">Meat</button>
+                            <button class="category-btn" onclick="setRibbonFilter('cat-Seafood', this)">Seafood</button>
+                        </div>
+                        <select id="filterCuisine" class="filter-select" onchange="search5000Recipes()" style="margin-bottom: 1rem;">
+                            <option value="all">🌍 All Cuisines</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Indian">Indian</option>
+                            <option value="French">French</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="Thai">Thai</option>
+                            <option value="Mediterranean">Mediterranean</option>
+                            <option value="American">American</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Japanese">Japanese</option>
+                        </select>
+                        <input type="text" id="recipeSearchInput" onkeyup="search5000Recipes()" placeholder="Search 5,000+ recipes (e.g., pasta, chicken, cake)...">
+                        <div style="margin-bottom: 1.5rem; display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                            <span style="color: var(--text-muted); font-size: 0.9rem;"><i class="fa-solid fa-fire"></i> Most sought for:</span>
+                            <button class="category-btn" style="padding: 0.3rem 1rem; font-size: 0.85rem;" onclick="document.getElementById('recipeSearchInput').value='Garlic Salmon'; search5000Recipes();">Garlic Salmon</button>
+                            <button class="category-btn" style="padding: 0.3rem 1rem; font-size: 0.85rem;" onclick="document.getElementById('recipeSearchInput').value='Taco'; search5000Recipes();">Tacos</button>
+                            <button class="category-btn" style="padding: 0.3rem 1rem; font-size: 0.85rem;" onclick="document.getElementById('recipeSearchInput').value='Curry'; search5000Recipes();">Curry</button>
+                            <button class="category-btn" style="padding: 0.3rem 1rem; font-size: 0.85rem;" onclick="document.getElementById('recipeSearchInput').value='Steak'; search5000Recipes();">Steak</button>
+                        </div>
+                        <div id="aiGenerating" class="ai-generating">Thinking... <i class="fa-solid fa-spinner fa-spin"></i></div>
+                        <p style="color: var(--secondary-color); margin-bottom: 2rem;" id="recipeResultCount">Showing top suggestions out of 5,000 indexed recipes:</p>
+                        <div class="grid-container" id="recipeSearchResultsContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY PANTRY TAB -->
+        <div id="tab-pantry" class="tab-content">
+            <section class="hero hero-shop" style="height: 300px;">
+                <div class="hero-content hero-content-left">
+                    <h1 class="hero-title hero-title-light">My Pantry</h1>
+                    <p style="font-size: 1.2rem;">Keep track of ingredients and Auto-Suggest Recipes.</p>
+                </div>
+            </section>
+            <div class="section-wrapper">
+                <div class="flex" style="align-items: flex-start;">
+                    <!-- Manual Entry -->
+                    <div style="flex: 1; background: var(--bg-panel); padding: 2rem; border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-box"></i> Saved Inventory</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-muted);">Data is saved to your Local Storage when logged in!</p>
+                        <div class="flex">
+                            <input type="text" id="pantryInput" placeholder="Add an item (e.g. Milk)" onkeydown="if(event.key === 'Enter') addPantryItem()">
+                            <button class="btn btn-primary" onclick="addPantryItem()">Add</button>
+                        </div>
+                        <div id="pantryList" style="margin-top: 1rem; margin-bottom: 2rem;"></div>
+                        <button class="btn-outline" style="width: 100%;" onclick="suggestRecipes()">✨ Suggest Recipes From Pantry</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECIPES (BUNDLES) TAB -->
+        <div id="tab-recipes" class="tab-content">
+            <section class="hero hero-recipes" style="height: 300px;">
+                <div class="hero-content hero-content-left">
+                    <h1 class="hero-title hero-title-light">Pre-Packaged Bundles</h1>
+                    <p style="font-size: 1.2rem;">One-click shopping for popular meals.</p>
+                </div>
+            </section>
+            <div class="section-wrapper">
+                <div class="grid-container" id="bundlesContainer"></div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC INFO TAB (FOOTER LINKS) -->
+        <div id="tab-info" class="tab-content">
+            <section class="hero hero-home" style="height: 300px; background-image: none; background: #FF5A00;">
+                <div class="hero-overlay" style="background: linear-gradient(to right, rgba(0,0,0,0.9), transparent);"></div>
+                <div class="hero-content hero-content-left" style="max-width: 800px; text-align: left;">
+                    <h1 class="hero-title hero-title-light" id="infoHeroTitle">Information</h1>
+                    <p style="font-size: 1.2rem;">Official Policies & Documentation.</p>
+                </div>
+            </section>
+            <div class="section-wrapper" style="max-width: 800px; padding-top: 2rem;">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary-color);" id="infoContentTitle">Content Overview</h2>
+                <div id="infoContentText" style="line-height: 1.8; color: var(--text-muted); font-size: 1.1rem;">
+                    Loading document metadata...
+                </div>
+                <button class="btn btn-primary" style="margin-top: 3rem;" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i> Return Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART MODAL -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <i class="fa-solid fa-times close-modal" onclick="closeCart()"></i>
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary-color);">Your Shopping Cart</h2>
+            <div class="cart-list" id="cartItemList">
+                <p style="color: var(--text-muted);">Cart is empty.</p>
+            </div>
+            <hr style="border:0; border-top: 1px solid rgba(255,255,255,0.2); margin: 1rem 0;">
+            <div style="display:flex; justify-content:space-between; font-size: 1.4rem; font-weight:700; margin-bottom: 1.5rem;">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <i class="fa-solid fa-times close-modal" onclick="closeLogin()"></i>
+            <h2 style="margin-bottom: 0.5rem; color: var(--primary-color);">Account Login</h2>
+            <p style="color:var(--text-muted); margin-bottom: 2rem;">Login to save your Pantry data to local storage.</p>
+            <input type="text" id="usernameInput" placeholder="Enter Username (e.g. Guest)">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="processLogin()">Secure Login</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer style="background: #000; padding: 4rem 3rem; border-top: 1px solid rgba(255,90,0,0.3); color: var(--text-muted);">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1200px; margin: 0 auto; gap: 2rem;">
+            <div style="flex: 1; min-width: 200px;">
+                <h4 style="color: var(--text-main); margin-bottom: 1rem; text-transform: uppercase;">Company</h4>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">About Us</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Service</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Newsroom</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Contact Us</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Our Values in Action</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <h4 style="color: var(--text-main); margin-bottom: 1rem; text-transform: uppercase;">Help</h4>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Health and Nutrition</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">FAQs</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Chat With Us</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Site Map</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Events</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <h4 style="color: var(--text-main); margin-bottom: 1rem; text-transform: uppercase;">Legal</h4>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Privacy Policy</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Terms</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Accessibility</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <h4 style="color: var(--text-main); margin-bottom: 1rem; text-transform: uppercase;">Services</h4>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Catering Near Me</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Grocery Delivery & Pickup</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Business Customers</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Suppliers</p>
+                <p style="margin-bottom:0.5rem; cursor:pointer;" onclick="showFooterInfo(this.innerText)">Restaurants</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <h4 style="color: var(--text-main); margin-bottom: 1rem; text-transform: uppercase;">Follow Us</h4>
+                <div style="font-size: 1.5rem; gap: 1rem; display: flex;">
+                    <i class="fa-brands fa-facebook" style="cursor:pointer; color:var(--text-main);"></i>
+                    <i class="fa-brands fa-twitter" style="cursor:pointer; color:var(--text-main);"></i>
+                    <i class="fa-brands fa-instagram" style="cursor:pointer; color:var(--text-main);"></i>
+                    <i class="fa-brands fa-tiktok" style="cursor:pointer; color:var(--text-main);"></i>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+            &copy; 2026 SmartChef Premium Digital Grocery. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

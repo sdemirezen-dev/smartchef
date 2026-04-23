@@ -1,0 +1,113 @@
+:root {
+  --primary-color: #FF5A00; /* Energetic Orange */
+  --primary-glow: rgba(255, 90, 0, 0.4);
+  --secondary-color: #00FF66; /* Neon Green Accent */
+  --bg-dark: #121212;
+  --bg-panel: #1E1E1E;
+  --text-main: #FFFFFF;
+  --text-muted: #A0A0A0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+
+/* Navbar */
+.navbar {
+  position: fixed; top: 0; width: 100%; padding: 1.5rem 3rem;
+  display: flex; justify-content: space-between; align-items: center; z-index: 100;
+  background: rgba(18, 18, 18, 0.95); border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.brand { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; cursor: pointer; }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; text-transform: uppercase;}
+.nav-links a.active, .nav-links a:hover { color: var(--primary-color); }
+.nav-actions { display: flex; gap: 1rem; align-items: center; }
+
+/* Buttons */
+.btn { padding: 0.8rem 2rem; font-weight: 700; text-transform: uppercase; border: none; cursor: pointer; border-radius: 4px; transition: 0.3s;}
+.btn-primary { background: var(--primary-color); color: #fff; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 15px var(--primary-glow); }
+.btn-outline { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); padding: 0.5rem 1.5rem;}
+.btn-outline:hover { background: var(--primary-color); color: #fff; }
+
+/* Tab Heroes (Landing Pages) */
+.hero {
+  height: 450px; width: 100%; position: relative; display: flex; padding: 6rem; align-items: center;
+  background-size: cover; background-position: center; border-bottom: 3px solid var(--primary-color);
+}
+.hero-home { height: 600px; background-image: url('file:///C:/Users/DELL/.gemini/antigravity/brain/5d94b0d6-bab7-4b1b-a7c2-4c87ce6c59be/premium_grocery_hero_1776361649972.png'); }
+.hero-shop { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('file:///C:/Users/DELL/.gemini/antigravity/brain/5d94b0d6-bab7-4b1b-a7c2-4c87ce6c59be/premium_grocery_hero_1776361649972.png'); }
+.hero-recipes { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('file:///C:/Users/DELL/.gemini/antigravity/brain/5d94b0d6-bab7-4b1b-a7c2-4c87ce6c59be/premium_grocery_hero_1776361649972.png'); }
+
+.hero-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to left, rgba(255,255,255,0.95), transparent); z-index: 1;}
+.hero-content { position: relative; z-index: 2; margin-left: auto; text-align: right; max-width: 600px;}
+.hero-content-left { margin-right: auto; text-align: left; margin-left: 0;}
+
+.hero-title { font-size: 4rem; font-weight: 900; color: #000; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1;}
+.hero-title-light { color: #fff; font-size: 3.5rem;}
+.hero-subtitle-container { background: var(--primary-color); padding: 0.5rem 1rem; display: inline-block; margin-bottom: 2rem; transform: skewX(-10deg);}
+.hero-subtitle { color: #000; font-weight: 800; letter-spacing: 6px; text-transform: uppercase; transform: skewX(10deg);}
+
+/* Tabs */
+.tab-content { display: none; padding-bottom: 8rem; }
+.tab-content.active { display: block; animation: fadeIn 0.4s; }
+.section-wrapper { max-width: 1400px; margin: 4rem auto; padding: 0 3rem; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Cards Grid */
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
+.card { background: var(--bg-panel); border: 1px solid rgba(255,90,0,0.2); border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative;}
+.card:hover { border-color: var(--primary-color); transform: translateY(-5px); box-shadow: 0 0 15px rgba(255,90,0,0.1); }
+.card-img-placeholder { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center;}
+.card-content { padding: 1.5rem; }
+.card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.price-tag { font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 1rem; display: block; }
+.btn-add { width: 100%; background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); padding: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.3s; border-radius: 4px; text-transform: uppercase;}
+.btn-add:hover { background: var(--primary-color); color: #fff; }
+.recipe-badge { position: absolute; top: 1rem; right: 1rem; background: var(--primary-color); padding: 0.3rem 0.8rem; font-size: 0.8rem; font-weight: 700; border-radius: 20px;}
+
+/* Pantry & Modals */
+.pantry-item { background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 4px; display: inline-block; margin: 0.2rem; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: none; align-items: center; justify-content: center; }
+.modal-box { background: var(--bg-panel); padding: 3rem; border-radius: 8px; border: 2px solid var(--primary-color); max-width: 500px; width: 100%; position: relative;}
+.close-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);}
+
+/* Cart Item List */
+.cart-list { max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem; }
+.cart-item { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+/* Input */
+input { width: 100%; padding: 1rem; background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 1rem; border-radius: 4px; margin-bottom: 1rem; }
+input:focus { border-color: var(--primary-color); outline: none; }
+
+/* Utility */
+.d-none { display: none !important; }
+.flex { display: flex; gap: 1rem;}
+
+/* Categories */
+.category-bar { display: flex; gap: 1rem; margin-bottom: 2rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: thin; scrollbar-color: var(--primary-color) #000; }
+.category-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 0.5rem 1.5rem; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: 600; transition: 0.3s;}
+.category-btn.active, .category-btn:hover { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+
+/* What to Cook Layout */
+.wtc-container { display: flex; gap: 2rem; align-items: flex-start; }
+@media(max-width: 900px) { .wtc-container { flex-direction: column; } }
+.wtc-sidebar { flex: 0 0 350px; display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
+.wtc-main { flex: 1; min-width: 0; }
+
+/* AI & Filters Panel */
+.panel { background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.panel h3 { color: var(--primary-color); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.3rem; }
+textarea { width: 100%; padding: 1rem; background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 1rem; border-radius: 4px; resize: vertical; min-height: 100px; margin-bottom: 1rem; font-family: inherit;}
+textarea:focus { border-color: var(--primary-color); outline: none; }
+select.filter-select { width: 100%; padding: 0.8rem; background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 1rem; border-radius: 4px; margin-bottom: 1rem; appearance: auto; cursor: pointer;}
+select.filter-select:focus { border-color: var(--primary-color); outline: none; }
+
+/* Generating Animation */
+.ai-generating { text-align: center; color: var(--secondary-color); padding: 2rem 0; font-weight: bold; animation: pulse 1.5s infinite; display: none; margin-bottom: 1rem;}
+@keyframes pulse { 0% { opacity: 0.6; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.6; transform: scale(0.98); } }
+
+.ai-recipe-card { border: 2px solid var(--secondary-color) !important; box-shadow: 0 0 20px rgba(0, 255, 102, 0.2) !important; }
+.ai-badge { position: absolute; top: 1rem; left: 1rem; background: var(--secondary-color); color: #000; padding: 0.3rem 0.8rem; font-size: 0.8rem; font-weight: 800; border-radius: 4px; text-transform: uppercase;}
+
